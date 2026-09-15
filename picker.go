@@ -1,3 +1,5 @@
+// xsscolorpicker/picker.go
+
 package colorpicker
 
 import (
@@ -634,13 +636,16 @@ func newSpacedLayout(l fyne.Layout, objects ...fyne.CanvasObject) *fyne.Containe
 }
 
 func newCheckeredBackground() *canvas.Raster {
+	boxSize := currentStyle.CheckerBoxSize
+	if boxSize <= 0 {
+		boxSize = 10
+	}
+	light := currentStyle.CheckerLight
+	dark := currentStyle.CheckerDark
 	return canvas.NewRasterWithPixels(func(x, y, _, _ int) color.Color {
-		const boxSize = 10
-
 		if (x/boxSize)%2 == (y/boxSize)%2 {
-			return color.Gray{Y: 58}
+			return light
 		}
-
-		return color.Gray{Y: 84}
+		return dark
 	})
 }

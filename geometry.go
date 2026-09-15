@@ -1,3 +1,5 @@
+// xsscolorpicker/geometry.go
+
 package colorpicker
 
 import (

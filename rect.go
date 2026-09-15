@@ -1,3 +1,5 @@
+// xsscolorpicker/rect.go
+
 package colorpicker
 
 import (
@@ -29,6 +31,8 @@ type colorSelectModalRect struct {
 	parent      fyne.Window
 	onChange    func(color.Color)
 	pickerStyle PickerStyle
+	dialogTitle string
+	dialogOK    string
 }
 
 // NewColorSelectModalRect returns a rectangle that can be tapped to open a color picker modal.
@@ -37,10 +41,23 @@ func NewColorSelectModalRect(parent fyne.Window, minSize fyne.Size, defalutColor
 		tappableRect: newTappableRect(defalutColor),
 		parent:       parent,
 		pickerStyle:  StyleHue,
+		dialogTitle:  "Select color",
+		dialogOK:     "OK",
 	}
 	rect.tappableRect.tapped = rect.tapped
 	rect.tappableRect.SetMinSize(minSize)
 	return rect
+}
+
+// SetDialogLabels переопределяет заголовок диалога и текст кнопки OK.
+// Вызывать до показа диалога (обычно сразу после создания виджета).
+func (r *colorSelectModalRect) SetDialogLabels(title, ok string) {
+	if title != "" {
+		r.dialogTitle = title
+	}
+	if ok != "" {
+		r.dialogOK = ok
+	}
 }
 
 func (r *colorSelectModalRect) SetOnChange(f func(color.Color)) {
@@ -65,7 +82,7 @@ func (r *colorSelectModalRect) tapped(e *fyne.PointEvent) {
 		r.setColor(c)
 	})
 
-	dialog.ShowCustom("Select color", "OK", fyne.NewContainer(picker), r.parent)
+	dialog.ShowCustom(r.dialogTitle, r.dialogOK, fyne.NewContainer(picker), r.parent)
 }
 
 func (r *colorSelectModalRect) Cursor() desktop.Cursor {

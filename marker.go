@@ -1,17 +1,17 @@
+// xsscolorpicker/marker.go
+
 package colorpicker
 
 import (
-	"image/color"
 	"math"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 )
 
-var (
-	markerFillColor   = color.NRGBA{50, 50, 50, 120}
-	markerStrokeColor = color.NRGBA{50, 50, 50, 200}
-)
+// Цвета маркеров берутся из currentStyle (см. style.go). Переменные
+// markerFillColor/markerStrokeColor удалены — раньше они были глобальным
+// хардкодом и не подчинялись теме.
 
 type marker interface {
 	fyne.CanvasObject
@@ -38,8 +38,8 @@ type defaultMarker struct {
 func newDefaultMarker(radius float32) marker {
 	marker := &defaultMarker{
 		Circle: &canvas.Circle{
-			FillColor:   markerFillColor,
-			StrokeColor: markerStrokeColor,
+			FillColor:   currentStyle.MarkerFill,
+			StrokeColor: currentStyle.MarkerStroke,
 			StrokeWidth: 1,
 		},
 		radius: radius,
@@ -54,8 +54,10 @@ func (m *defaultMarker) position() fyne.Position {
 
 func (m *defaultMarker) setPosition(p fyne.Position) {
 	m.center = p
-	m.Position1 = fyne.NewPos(p.X-float32(m.radius), p.Y-float32(m.radius))
-	m.Position2 = fyne.NewPos(p.X+float32(m.radius), p.Y+float32(m.radius))
+	topLeft := fyne.NewPos(p.X-m.radius, p.Y-m.radius)
+	size := fyne.NewSize(m.radius*2, m.radius*2)
+	m.Circle.Move(topLeft)
+	m.Circle.Resize(size)
 }
 
 func (m *defaultMarker) object() fyne.CanvasObject {

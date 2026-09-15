@@ -1,3 +1,5 @@
+// xsscolorpicker/raster.go
+
 package colorpicker
 
 import (

@@ -1,3 +1,5 @@
+// xsscolorpicker/colorpicker.go
+
 package colorpicker
 
 import (
